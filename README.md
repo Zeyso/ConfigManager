@@ -18,3 +18,10 @@
 
 
 ## YmlExamples
+### Example for creating YML File
+        YmlManager ymlManager = new YmlManager();
+        ymlManager.createFile("data");
+
+### Example for creating YML File with directory
+        YmlManager ymlManager = new YmlManager();
+        ymlManager.createFile("data", "test");
