@@ -1,8 +1,21 @@
 import java.io.File;
 
 public class YmlManager {
-    public YmlManager createFile(String fileName){
+    String fileName;
+    String dir;
+
+
+    public YmlManager(String fileName){
+        this.fileName = fileName;
+    }
+    public YmlManager(String fileName, String dir){
+        this.fileName = fileName;
+        this.dir = dir;
+    }
+
+    public YmlManager createFile(){
         //checking if fileName is null
+
         if (fileName == null) {
             throw new IllegalArgumentException("fileName cannot be null");
         }
@@ -11,6 +24,32 @@ public class YmlManager {
             //if fileName does not end with .yml, add .yml extension
             fileName = fileName + ".yml";
         }
+        if (dir != null){
+            try {
+                //create new directory
+                File directory = new File(dir);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                    System.out.println("Directory created: " + directory.getName());
+                }
+                if (!dir.endsWith("/")) {
+                    dir = dir + "/";
+                }
+                //create new file
+                File file = new File(dir + fileName);
+                if (file.exists()) {
+                    System.out.println("The file '" +fileName + "' already exists");
+                } else {
+                    file.createNewFile();
+                    System.out.println("File created: " + file.getName());
+                    return this;
+                }
+            } catch (Exception e) {
+                System.out.println("An error occurred");
+                e.printStackTrace();
+            }
+        }
+
 
         //create new jsonFile
         File file = new File(fileName);
@@ -29,56 +68,50 @@ public class YmlManager {
         }
         return this;
     }
-    public YmlManager createFile(String fileName, String dir){
-        //checking if fileName is null
+
+    public YmlManager deleteFile(){
         if (fileName == null) {
             throw new IllegalArgumentException("fileName cannot be null");
         }
-        //checking if dir is null
-        if (dir == null) {
-            throw new IllegalArgumentException("dir cannot be null");
-        }
-        //checking if dir starts with "/"
-        if (!dir.startsWith("/")) {
-            dir = "/" + dir;
-        }
-        //checking if fileName ends with .yml extension
+
+        //checking if fileName is ending with .yml extension
         if (!fileName.endsWith(".yml")) {
-            //if fileName does not end with .yml, add .yml extension
             fileName = fileName + ".yml";
         }
-        //initializing new file and directory
-        File directory = new File(dir);
-        File file = new File(dir, fileName);
-        //checking if directory already exists
-        if (directory.exists()){
-            System.out.println("Directory '" + dir + "' already exists");
+
+
+        //checking if file exists
+        if (!(dir == null)){
+            if (!dir.endsWith("/")) {
+                dir = dir + "/";
+            }
+            File file = new File(dir, fileName);
+            File directory = new File(dir);
+            if (!file.exists()) {
+                System.out.println("The file '" +fileName + "' does not exist");
+                return this;
+            }
+            try{
+                file.delete();
+                directory.delete();
+            } catch (Exception e) {
+                System.out.println("An error occurred");
+                e.printStackTrace();
+            }
+            return this;
+        }
+        File file = new File(fileName);
+        if (!file.exists()) {
+            System.out.println("The file '" +fileName + "' does not exist");
             return this;
         }
 
-        //checking if file already exists
-        if (file.exists()) {
-            System.out.println("The file '" +fileName + "' already exists");
-            return this;
-        }
-        try {
-            //create new directory
-            directory.mkdir();
-            System.out.println("Directory created: " + directory.getName());
-        } catch (Exception e) {
-            System.out.println("An error occurred while creating directory '" + directory.getName() + "'");
-            e.printStackTrace();
-        }
-        try {
-            //create new file
-
-            file.createNewFile();
-            System.out.println("File created: " + file.getName());
+        try{
+            file.delete();
         } catch (Exception e) {
             System.out.println("An error occurred");
             e.printStackTrace();
         }
-
         return this;
     }
 }
