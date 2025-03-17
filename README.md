@@ -8,7 +8,8 @@
 
 ## JsonExamples
 
-
+        JsonManager jsonManager = new JsonManager();
+        jsonManager.createFile("data", "test");
 
 
 ## YmlExamples
