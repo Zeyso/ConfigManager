@@ -1,4 +1,3 @@
-import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -34,7 +33,7 @@ public class YmlManager {
         }
     }
 
-    public YmlManager createFile(){
+    public boolean createFile(){
         //checking if fileName is null
 
         if (fileName == null) {
@@ -55,11 +54,11 @@ public class YmlManager {
                 File file = new File(dir + fileName);
                 if (file.exists()) {
                     System.out.println("The file '" +fileName + "' already exists");
-                    return this;
+                    return false;
                 }
                     file.createNewFile();
                     System.out.println("File created: " + file.getName());
-                    return this;
+                    return true;
             } catch (Exception e) {
                 System.out.println("An error occurred");
                 e.printStackTrace();
@@ -72,7 +71,7 @@ public class YmlManager {
         //checking if file already exists
         if (file.exists()) {
             System.out.println("The file '" +fileName + "' already exists");
-            return this;
+            return false;
         }
             try {
                 //create new file
@@ -83,10 +82,10 @@ public class YmlManager {
                 e.printStackTrace();
             }
 
-        return this;
+        return true;
     }
 
-    public YmlManager deleteFile(){
+    public boolean deleteFile(){
         if (fileName == null) {
             throw new IllegalArgumentException("fileName cannot be null");
         }
@@ -102,7 +101,7 @@ public class YmlManager {
             File directory = new File(dir);
             if (!file.exists()) {
                 System.out.println("The file '" +fileName + "' does not exist");
-                return this;
+                return false;
             }
             try{
                 file.delete();
@@ -111,12 +110,12 @@ public class YmlManager {
                 System.out.println("An error occurred");
                 e.printStackTrace();
             }
-            return this;
+            return true;
         }
         File file = new File(fileName);
         if (!file.exists()) {
             System.out.println("The file '" +fileName + "' does not exist");
-            return this;
+            return false;
         }
 
         try{
@@ -125,9 +124,9 @@ public class YmlManager {
             System.out.println("An error occurred");
             e.printStackTrace();
         }
-        return this;
+        return true;
     }
-    public YmlManager writeLine(String key, String value) throws IOException {
+    public boolean writeLine(String key, String value) throws IOException {
         checkYML();
         checkDir();
         File file = new File(fileName);
@@ -162,7 +161,7 @@ public class YmlManager {
         try (FileWriter writer = new FileWriter(file)) {
             yaml.dump(yamlMap, writer);
         }
-        return this;
+        return true;
     }
     public String readLine(String key) throws IOException {
         LoaderOptions options = new LoaderOptions();
@@ -177,7 +176,7 @@ public class YmlManager {
             }
         }
     }
-    public YmlManager updateValue(String key, String newValue) throws IOException {
+    public boolean updateValue(String key, String newValue) throws IOException {
         checkYML();
         checkDir();
 
@@ -206,6 +205,64 @@ public class YmlManager {
             yaml.dump(yamlMap, writer);
         }
 
-        return this;
+        return true;
+    }
+    public boolean deleteLine(String key) throws IOException {
+        checkYML();
+        checkDir();
+        File file = new File(fileName);
+        Yaml yaml = new Yaml();
+        Map<String, Object> yamlMap;
+
+        if (file.exists()) {
+            try (InputStream inputStream = new FileInputStream(file)) {
+                yamlMap = yaml.load(inputStream);
+                if (yamlMap == null) {
+                    yamlMap = new HashMap<>();
+                }
+            }
+        } else {
+            throw new IOException("File does not exist");
+        }
+
+        if (yamlMap.containsKey(key)) {
+            yamlMap.remove(key);
+        } else {
+            throw new IllegalArgumentException("Key does not exist");
+        }
+
+        try (FileWriter writer = new FileWriter(file)) {
+            yaml.dump(yamlMap, writer);
+        }
+        return true;
+    }
+    public boolean deleteValue(String key) throws IOException {
+        checkYML();
+        checkDir();
+        File file = new File(fileName);
+        Yaml yaml = new Yaml();
+        Map<String, Object> yamlMap;
+
+        if (file.exists()) {
+            try (InputStream inputStream = new FileInputStream(file)) {
+                yamlMap = yaml.load(inputStream);
+                if (yamlMap == null) {
+                    yamlMap = new HashMap<>();
+                }
+            }
+        } else {
+            throw new IOException("File does not exist");
+        }
+
+        if (yamlMap.containsKey(key)) {
+            yamlMap.put(key, null);
+            try (FileWriter writer = new FileWriter(file)) {
+                yaml.dump(yamlMap, writer);
+            }
+        } else {
+            throw new IllegalArgumentException("Key does not exist");
+        }
+
+        return true;
     }
 }

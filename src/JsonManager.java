@@ -1,14 +1,11 @@
 
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Map;
 
 public class JsonManager {
     private String fileName;
@@ -37,7 +34,7 @@ public class JsonManager {
         }
     }
 
-    public JsonManager createFile(){
+    public boolean createFile(){
         //checking if fileName is null
 
         if (fileName == null) {
@@ -47,6 +44,7 @@ public class JsonManager {
         checkJson();
         if (dir != null){
             try {
+
                 //create new directory
                 File directory = new File(dir);
                 if (!directory.exists()) {
@@ -57,12 +55,12 @@ public class JsonManager {
                 //create new file
                 File file = new File(dir + fileName);
                 if (file.exists()) {
-                    return this;
+                    return false;
                 }
 
                 file.createNewFile();
                 System.out.println("File created: " + file.getName());
-                return this;
+                return true;
 
             } catch (Exception e) {
                 System.out.println("An error occurred");
@@ -75,7 +73,7 @@ public class JsonManager {
         File file = new File(fileName);
         //checking if file already exists
         if (file.exists()) {
-            return this;
+            return false;
         }
             try {
                 //create new file
@@ -86,10 +84,10 @@ public class JsonManager {
                 e.printStackTrace();
 
         }
-        return this;
+        return true;
     }
 
-    public JsonManager deleteFile(){
+    public boolean deleteFile(){
         if (fileName == null) {
             throw new IllegalArgumentException("fileName cannot be null");
         }
@@ -107,7 +105,7 @@ public class JsonManager {
             File directory = new File(dir);
             if (!file.exists()) {
                 System.out.println("The file '" +fileName + "' does not exist");
-                return this;
+                return false;
             }
             try{
                 file.delete();
@@ -116,12 +114,12 @@ public class JsonManager {
                 System.out.println("An error occurred");
                 e.printStackTrace();
             }
-            return this;
+            return true;
         }
         File file = new File(fileName);
         if (!file.exists()) {
             System.out.println("The file '" +fileName + "' does not exist");
-            return this;
+            return false;
         }
 
         try{
@@ -130,7 +128,7 @@ public class JsonManager {
             System.out.println("An error occurred");
             e.printStackTrace();
         }
-        return this;
+        return true;
     }
 
 
@@ -146,7 +144,7 @@ public class JsonManager {
     }
 
 
-    public JsonManager writeLine(String key, String value) throws IOException {
+    public boolean writeLine(String key, String value) throws IOException {
         checkJson();
         checkDir();
 
@@ -163,9 +161,9 @@ public class JsonManager {
         root.put(key, value);
         mapper.writeValue(file, root);
 
-        return this;
+        return true;
     }
-    public JsonManager updateValue(String key, String newValue) throws IOException {
+    public boolean updateValue(String key, String newValue) throws IOException {
         checkJson();
         checkDir();
 
@@ -186,6 +184,52 @@ public class JsonManager {
             throw new IllegalArgumentException("Key does not exist");
         }
 
-        return this;
+        return true;
+    }
+    public boolean deleteLine(String key) throws IOException {
+        checkJson();
+        checkDir();
+
+        File file = new File(fileName);
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root;
+
+        if (file.exists()) {
+            root = (ObjectNode) mapper.readTree(file);
+        } else {
+            throw new IOException("File does not exist");
+        }
+
+        if (root.has(key)) {
+            root.remove(key);
+            mapper.writeValue(file, root);
+        } else {
+            throw new IllegalArgumentException("Key does not exist");
+        }
+
+        return true;
+    }
+    public boolean deleteValue(String key) throws IOException {
+        checkJson();
+        checkDir();
+
+        File file = new File(fileName);
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root;
+
+        if (file.exists()) {
+            root = (ObjectNode) mapper.readTree(file);
+        } else {
+            throw new IOException("File does not exist");
+        }
+
+        if (root.has(key)) {
+            root.putNull(key);
+            mapper.writeValue(file, root);
+        } else {
+            throw new IllegalArgumentException("Key does not exist");
+        }
+
+        return true;
     }
 }
