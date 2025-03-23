@@ -20,7 +20,7 @@
         jsonManager.readLine("key")
 ### Example for adding Json Files value
         jsonManager.writeLine("key", "value");
-### Example for adding Json Files value
+### Example for updating Json Files value
         jsonManager.updateValue("key", "value");
         
 ## YmlExamples
