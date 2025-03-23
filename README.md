@@ -50,6 +50,10 @@
         jsonManager.writeLine("key", "value");
 ### Example for updating Json Files value
         jsonManager.updateValue("key", "value");
+### Example for deleting Json Files line
+        jsonManager.deleteLine("key");
+### Example for deleting Json Files value
+        jsonManager.deleteValue("key");
         
 ## YmlExamples
 ### Example for creating YML File
@@ -66,3 +70,7 @@
         ymlManager.writeLine("key", "value");
 ### Example for updating YML Files value
         ymlManager.updateValue("key", "value");
+### Example for deleting YML Files line
+        ymlManager.updateValue("key");
+### Example for deleting YML Files value
+        ymlManager.updateValue("key");
