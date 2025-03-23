@@ -1,8 +1,19 @@
+
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Map;
 
 public class JsonManager {
-    String fileName;
-    String dir;
+    private String fileName;
+    private String dir;
+    private String value = null;
 
 
     public JsonManager(String fileName){
@@ -13,6 +24,19 @@ public class JsonManager {
         this.dir = dir;
     }
 
+    private void checkJson(){
+        if (!fileName.endsWith(".json")) {
+            fileName = fileName + ".json";
+        }
+    }
+    private void checkDir(){
+        if (dir != null){
+            if (!dir.endsWith("/")) {
+                dir = dir + "/";
+            }
+        }
+    }
+
     public JsonManager createFile(){
         //checking if fileName is null
 
@@ -20,10 +44,7 @@ public class JsonManager {
             throw new IllegalArgumentException("fileName cannot be null");
         }
         //checking if fileName ends with .json extension
-        if (!fileName.endsWith(".json")) {
-            //if fileName does not end with .json, add .json extension
-            fileName = fileName + ".json";
-        }
+        checkJson();
         if (dir != null){
             try {
                 //create new directory
@@ -32,9 +53,7 @@ public class JsonManager {
                     directory.mkdirs();
                     System.out.println("Directory created: " + directory.getName());
                 }
-                if (!dir.endsWith("/")) {
-                    dir = dir + "/";
-                }
+                checkDir();
                 //create new file
                 File file = new File(dir + fileName);
                 if (file.exists()) {
@@ -55,7 +74,7 @@ public class JsonManager {
         File file = new File(fileName);
         //checking if file already exists
         if (file.exists()) {
-            System.out.println("The file '" +fileName + "' already exists");
+            System.out.println("The file '" + fileName + "' already exists");
         } else {
             try {
                 //create new file
@@ -75,9 +94,7 @@ public class JsonManager {
         }
 
         //checking if fileName is ending with .json extension
-        if (!fileName.endsWith(".json")) {
-            fileName = fileName + ".json";
-        }
+        checkJson();
 
 
         //checking if file exists
@@ -112,6 +129,40 @@ public class JsonManager {
             System.out.println("An error occurred");
             e.printStackTrace();
         }
-    return this;
+        return this;
     }
+
+
+    public String readLine(String key) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(new File(fileName));
+        JsonNode valueNode = jsonNode.get(key);
+        if (valueNode != null) {
+            return valueNode.asText();
+        } else {
+            return "Key does not exist";
+        }
+    }
+
+
+    public JsonManager writeLine(String key, String value) throws IOException {
+        checkJson();
+        checkDir();
+
+        File file = new File(fileName);
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root;
+
+        if (file.exists()) {
+            root = (ObjectNode) mapper.readTree(file);
+        } else {
+            root = mapper.createObjectNode();
+        }
+
+        root.put(key, value);
+        mapper.writeValue(file, root);
+
+        return this;
+    }
+
 }
