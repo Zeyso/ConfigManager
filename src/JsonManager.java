@@ -57,12 +57,13 @@ public class JsonManager {
                 //create new file
                 File file = new File(dir + fileName);
                 if (file.exists()) {
-                    System.out.println("The file '" +fileName + "' already exists");
-                } else {
-                    file.createNewFile();
-                    System.out.println("File created: " + file.getName());
                     return this;
                 }
+
+                file.createNewFile();
+                System.out.println("File created: " + file.getName());
+                return this;
+
             } catch (Exception e) {
                 System.out.println("An error occurred");
                 e.printStackTrace();
@@ -74,8 +75,8 @@ public class JsonManager {
         File file = new File(fileName);
         //checking if file already exists
         if (file.exists()) {
-            System.out.println("The file '" + fileName + "' already exists");
-        } else {
+            return this;
+        }
             try {
                 //create new file
                 file.createNewFile();
@@ -83,7 +84,7 @@ public class JsonManager {
             } catch (Exception e) {
                 System.out.println("An error occurred");
                 e.printStackTrace();
-            }
+
         }
         return this;
     }
@@ -164,5 +165,27 @@ public class JsonManager {
 
         return this;
     }
+    public JsonManager updateValue(String key, String newValue) throws IOException {
+        checkJson();
+        checkDir();
 
+        File file = new File(fileName);
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root;
+
+        if (file.exists()) {
+            root = (ObjectNode) mapper.readTree(file);
+        } else {
+            throw new IOException("File does not exist");
+        }
+
+        if (root.has(key)) {
+            root.put(key, newValue);
+            mapper.writeValue(file, root);
+        } else {
+            throw new IllegalArgumentException("Key does not exist");
+        }
+
+        return this;
+    }
 }
