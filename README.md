@@ -41,7 +41,7 @@
         jsonManager.createFile();
 
 ### Example for creating Json File with directory
-        jsonManager.createFile();
+        jsonManager.createFile("file", "directory");
 ### Example for deleting Json Files
         jsonManager.deleteFile();
 ### Example for reading Json Files value
@@ -57,7 +57,7 @@
         ymlManager.createFile();
 
 ### Example for creating YML File with directory
-        ymlManager.createFile();
+        ymlManager.createFile("file", "directory");
 ### Example for deleting YML File
         ymlManager.deleteFile();
 ### Example for reading YML Files value
