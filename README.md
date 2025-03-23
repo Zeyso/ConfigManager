@@ -1,10 +1,38 @@
 # ConfigManager
 
 ## Table of Contents
-
+ - [MavenSetup](#Maven)
  - [JsonExamples](#JsonExamples)
  - [YmlExamples](#YmlExamples)
 
+## Maven
+       
+    <repositories>
+        <!-- Maven Central Repository -->
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.16.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>2.0</version>
+        </dependency>
+    </dependencies>
 
 ## JsonExamples
 
@@ -29,8 +57,12 @@
         ymlManager.createFile();
 
 ### Example for creating YML File with directory
-        YmlManager ymlManager = new YmlManager("test", "YmlFiles" );
         ymlManager.createFile();
 ### Example for deleting YML File
-        YmlManager ymlManager = new YmlManager("test", "YmlFiles" );
         ymlManager.deleteFile();
+### Example for reading YML Files value
+        ymlManager.readLine("key")
+### Example for adding YML Files value
+        ymlManager.writeLine("key", "value");
+### Example for updating YML Files value
+        ymlManager.updateValue("key", "value");
