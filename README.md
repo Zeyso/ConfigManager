@@ -13,11 +13,13 @@
         jsonManager.createFile();
 
 ### Example for creating Json File with directory
-        JsonManager jsonManager = new JsonManager("test", "JsonFiles" );
         jsonManager.createFile();
 ### Example for deleting Json Files
-        JsonManager jsonManager = new JsonManager("test", "JsonFiles" );
         jsonManager.deleteFile();
+### Example for reading Json Files value
+        jsonManager.readLine("key")
+### Example for adding Json Files value
+        jsonManager.writeLine("key", "value");
         
 ## YmlExamples
 ### Example for creating YML File
