@@ -48,6 +48,9 @@
         jsonManager.readLine("key")
 ### Example for adding Json Files value
         jsonManager.writeLine("key", "value");
+### Example for adding Json Files Values
+        String [] keys = {"value1", "value2", "value3"};
+        jsonManager.writeLine("test", keys);
 ### Example for updating Json Files value
         jsonManager.updateValue("key", "value");
 ### Example for deleting Json Files line
