@@ -155,6 +155,9 @@ public class JsonManager {
 
         if (file.exists()) {
             root = (ObjectNode) mapper.readTree(file);
+            if (root.has(key)) {
+                return this;
+            }
         } else {
             root = mapper.createObjectNode();
         }
